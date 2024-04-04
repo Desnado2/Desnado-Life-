@@ -1,0 +1,48 @@
+from flask import Flask, render_template, request, redirect, url_for
+
+app = Flask(__name__)
+
+# In-memory storage for simplicity. In a real-world app, you would use a database.
+users = []
+posts = []
+
+
+class User:
+    def __init__(self, username):
+        self.username = username
+        self.posts = []
+
+    def create_post(self, content):
+        post = {"author": self.username, "content": content}
+        self.posts.append(post)
+        posts.append(post)
+
+
+@app.route('/')
+def home():
+    return render_template('index.html', posts=posts)
+
+
+@app.route('/create_user', methods=['POST'])
+def create_user():
+    username = request.form.get('username')
+    user = User(username)
+    users.append(user)
+    return redirect(url_for('home'))
+
+
+@app.route('/create_post', methods=['POST'])
+def create_post():
+    username = request.form.get('username')
+    content = request.form.get('content')
+    
+    user = next((u for u in users if u.username == username), None)
+    
+    if user:
+        user.create_post(content)
+    
+    return redirect(url_for('home'))
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
