@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <style>
+        /* Styles CSS ici */
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <img src="votre_logo.png" alt="Logo" class="logo"> <!-- Remplacez 'votre_logo.png' par le chemin de votre logo -->
+    </div>
+
+    <div class="container">
+        <h2>Inscription</h2>
+        <form id="inscriptionForm">
+            <div class="form-group">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="prenom">Prénom :</label>
+                <input type="text" id="prenom" name="prenom" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm_password">Confirmer le mot de passe :</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="S'inscrire">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('inscriptionForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Empêche l'envoi du formulaire par défaut
+            
+            var nom = document.getElementById('nom').value;
+            var prenom = document.getElementById('prenom').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            
+            // Création d'un objet utilisateur
+            var nouvelUtilisateur = {
+                nom: nom,
+                prenom: prenom,
+                email: email,
+                password: password
+            };
+
+            // Envoi des données à une fonction pour les stocker dans le fichier ChatX
+            ajouterUtilisateur(nouvelUtilisateur);
+            
+            // Efface les champs du formulaire après l'inscription
+            document.getElementById('inscriptionForm').reset();
+        });
+
+        // Fonction pour ajouter un nouvel utilisateur dans le fichier ChatX
+        function ajouterUtilisateur(utilisateur) {
+            // Charger les données existantes du fichier
+            var donnees;
+            fetch('donnees.json')
+                .then(response => response.json())
+                .then(data => {
+                    donnees = data;
+                    // Simuler des données d'utilisateur (à remplacer par les données réelles de l'utilisateur)
+                    var nouvel_utilisateur = {
+                        "email": utilisateur.email,
+                        "nom": utilisateur.nom,
+                        "prenom": utilisateur.prenom,
+                        "photo_profil": "lien_vers_photo.jpg",
+                        "messages": []
+                    };
+
+                    // Ajouter le nouvel utilisateur aux données existantes
+                    donnees["utilisateurs"].push(nouvel_utilisateur);
+
+                    // Génération du code de confirmation
+                    var code_confirmation = secrets.tokenHex(16); // Génère un code hexadécimal de 16 caractères
+
+                    // Nouvel utilisateur avec le code de confirmation
+                    nouvel_utilisateur["code_confirmation"] = code_confirmation;
+
+                    // Enregistrer les modifications dans le fichier
+                    fetch('donnees.json', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(donnees),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Nouvel utilisateur ajouté : ', nouvel_utilisateur);
+                    })
+                    .catch((error) => {
+                        console.error('Erreur lors de l\'ajout de l\'utilisateur : ', error);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Erreur lors de la récupération des données : ', error);
+                });
+        }
+    </script>
+</body>
+</html>
