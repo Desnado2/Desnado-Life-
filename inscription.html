@@ -5,7 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription</title>
     <style>
-        /* Styles CSS ici */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 300px;
+            margin: 20px auto 0;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            font-size: 16px;
+            background-color: black;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #333;
+        }
+
+        .logo-container {
+            background-color: #333;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .logo {
+            width: 150px;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -73,9 +139,6 @@
             
             // Efface les champs du formulaire après l'inscription
             document.getElementById('inscriptionForm').reset();
-
-            // Redirection vers la page de confirmation
-            window.location.href = "confirmation.html";
         });
 
         // Fonction pour ajouter un nouvel utilisateur dans le fichier ChatX
@@ -87,7 +150,7 @@
                 .then(data => {
                     donnees = data;
                     // Simuler des données d'utilisateur (à remplacer par les données réelles de l'utilisateur)
-                    var nouvel_utilisateur = {
+                    varnouvel_utilisateur = {
                         "email": utilisateur.email,
                         "nom": utilisateur.nom,
                         "prenom": utilisateur.prenom,
@@ -109,6 +172,8 @@
                     .then(response => response.json())
                     .then(data => {
                         console.log('Nouvel utilisateur ajouté : ', nouvel_utilisateur);
+                        // Envoyer le code de confirmation à l'email de l'utilisateur
+                        envoyerEmailConfirmation(utilisateur.email, utilisateur.code_confirmation);
                     })
                     .catch((error) => {
                         console.error('Erreur lors de l\'ajout de l\'utilisateur : ', error);
@@ -128,6 +193,37 @@
                 code += charset.charAt(Math.floor(Math.random() * charset.length));
             }
             return code;
+        }
+
+        // Fonction pour envoyer l'email de confirmation avec Elastic Email
+        function envoyerEmailConfirmation(destinataire, codeConfirmation) {
+            var url = "https://api.elasticemail.com/v2/email/send";
+            var data = {
+                "apikey": "4b670513-b553662d-**********97B58", // Remplacez "**********97B58" par votre clé API Elastic Email
+                "subject": "Code de Confirmation",
+                "from: "VotreNom <votre@email.com>",
+                "fromName": "VotreNom",
+                "to": destinataire,
+                "bodyHtml": "Votre code de confirmation est : " + codeConfirmation
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams(data).toString(),
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Email envoyé avec succès !");
+                } else {
+                    console.error("Erreur lors de l'envoi de l'email :", response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors de l'envoi de l'email :", error);
+            });
         }
     </script>
 </body>
