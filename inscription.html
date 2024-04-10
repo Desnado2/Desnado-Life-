@@ -56,12 +56,16 @@
             var email = document.getElementById('email').value;
             var password = document.getElementById('password').value;
             
+            // Génération du code de confirmation
+            var code_confirmation = generateConfirmationCode();
+
             // Création d'un objet utilisateur
             var nouvelUtilisateur = {
                 nom: nom,
                 prenom: prenom,
                 email: email,
-                password: password
+                password: password,
+                code_confirmation: code_confirmation // Ajout du code de confirmation
             };
 
             // Envoi des données à une fonction pour les stocker dans le fichier ChatX
@@ -69,6 +73,9 @@
             
             // Efface les champs du formulaire après l'inscription
             document.getElementById('inscriptionForm').reset();
+
+            // Redirection vers la page de confirmation
+            window.location.href = "confirmation.html";
         });
 
         // Fonction pour ajouter un nouvel utilisateur dans le fichier ChatX
@@ -91,12 +98,6 @@
                     // Ajouter le nouvel utilisateur aux données existantes
                     donnees["utilisateurs"].push(nouvel_utilisateur);
 
-                    // Génération du code de confirmation
-                    var code_confirmation = secrets.tokenHex(16); // Génère un code hexadécimal de 16 caractères
-
-                    // Nouvel utilisateur avec le code de confirmation
-                    nouvel_utilisateur["code_confirmation"] = code_confirmation;
-
                     // Enregistrer les modifications dans le fichier
                     fetch('donnees.json', {
                         method: 'PUT',
@@ -116,6 +117,17 @@
                 .catch((error) => {
                     console.error('Erreur lors de la récupération des données : ', error);
                 });
+        }
+
+        // Fonction pour générer un code de confirmation aléatoire
+        function generateConfirmationCode() {
+            var length = 16;
+            var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var code = "";
+            for (var i = 0; i < length; i++) {
+                code += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            return code;
         }
     </script>
 </body>
