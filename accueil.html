@@ -106,17 +106,16 @@
       <span>Accueil</span>
       <div class="indicator"></div> <!-- Indicateur sous l'icône -->
     </a>
-    <a href="#" class="icon friends-icon" onclick="changeColor(this)">
-      <i class="fas fa-user-friends"></i>
-      <span>Amis ou contacts</span>
-      <div class="indicator"></div> <!-- Indicateur sous l'icône -->
-    </a>
-    <a href="#" class="icon message-icon" onclick="changeColor(this)">
+    <a href="message.html" class="icon message-icon" onclick="changeColor(this)">
       <i class="fas fa-comment"></i>
       <span>Message</span>
       <div class="indicator"></div> <!-- Indicateur sous l'icône -->
     </a>
-    <a href="#" class="icon notification-icon" onclick="changeColor(this)">
+    <a href="amis_et_contacts.html" class="icon friends-icon" onclick="changeColor(this)">
+      <i class="fas fa-user-friends"></i>
+      <span>Amis ou contacts</span>
+      <div class="indicator"></div> <!-- Indicateur sous l'icône -->
+    </a><a href="notification.html" class="icon notification-icon" onclick="changeColor(this)">
       <i class="fas fa-bell"></i>
       <span>Notification</span>
       <div class="indicator"></div> <!-- Indicateur sous l'icône -->
@@ -133,7 +132,7 @@
 <script>
 function changeColor(element) {
   var icons = document.querySelectorAll('.icon'); // Sélectionner toutes les icônes
-  icons.forEach(icon => { // Parcourir// Parcourir toutes les icônes
+  icons.forEach(icon => { // Parcourir toutes les icônes
     icon.classList.remove('clicked'); // Supprimer la classe 'clicked' de toutes les icônes
   });
   element.classList.toggle('clicked'); // Ajouter ou supprimer la classe 'clicked' de l'icône cliquée
